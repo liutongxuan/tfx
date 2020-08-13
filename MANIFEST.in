@@ -1,4 +1,5 @@
 recursive-include tfx/examples/chicago_taxi_pipeline/data *
+recursive-include tfx/examples/iris/data *
 include tfx/orchestration/experimental/interactive/export_templates/*.tmpl
 include tfx/experimental/templates/taxi/.gitignore
 include tfx/experimental/templates/taxi/*.ipynb

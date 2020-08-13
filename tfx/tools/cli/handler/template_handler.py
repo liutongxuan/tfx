@@ -45,9 +45,17 @@ _ADDITIONAL_FILE_PATHS = {
             'examples/chicago_taxi_pipeline/data/big_tipper_label/data.csv',
             'data/data.csv'),
     ],
+    'iris': [
+        _TemplateFilePath(
+            'examples/iris/data/iris.csv',
+            'data/data.csv'),
+    ],
 }
 _IGNORE_FILE_PATHS = {
     'taxi': [  # template name
+        'e2e_tests',
+    ],
+    'iris': [  # template name
         'e2e_tests',
     ],
 }

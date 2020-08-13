@@ -8,6 +8,8 @@
 *   Supported split configuration for Transform.
 
 ## Bug fixes and other changes
+*   Added a new template, 'iris' which is simple subset of existing iris
+    examples.
 
 ## Breaking changes
 
