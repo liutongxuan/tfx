@@ -132,6 +132,24 @@ def make_extra_packages_tfjs():
   ]
 
 
+def make_extra_packages_examples():
+  # Extra dependencies required for tfx/examples.
+  return [
+      # Required for presto ExampleGen custom component
+      'presto-python-client>=0.7,<0.8',
+      # Required for slack custom component
+      'slackclient>=2.8.2,<3',
+      'websocket-client>=0.57,<1',
+      # Required for bert examples
+      'tensorflow-text>=1.15.1,<3',
+      'tensorflow-hub>=0.9.0,<0.10',
+  ]
+
+
 def make_all_dependency_packages():
   # All extra dependencies.
-  return make_required_test_packages() + make_extra_packages_tfjs()
+  return [
+      *make_required_test_packages(),
+      *make_extra_packages_tfjs(),
+      *make_extra_packages_examples(),
+  ]
