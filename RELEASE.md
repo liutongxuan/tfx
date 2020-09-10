@@ -8,6 +8,8 @@
 *   Supported split configuration for Transform.
 
 ## Bug fixes and other changes
+*   Make two python scripts shell command from 'tfx' package installation. These
+    commands can be used directly independent of python installation locations.
 
 *   Supported CAIP Runtime 2.2 for online prediction pusher.
 *   Depends on `tensorflow-model-analysis>=0.24,<0.25`.

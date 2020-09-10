@@ -39,10 +39,7 @@ from tfx.utils import kube_utils
 from google.protobuf import json_format
 from ml_metadata.proto import metadata_store_pb2
 
-_CONTAINER_COMMAND = [
-    'python', '-m',
-    'tfx.orchestration.experimental.kubernetes.container_entrypoint'
-]
+_CONTAINER_COMMAND = ['tfx-kfp-container-entrypoint']
 
 # Suffix added to the component id to avoid MLMD conflict when
 # registering this component.

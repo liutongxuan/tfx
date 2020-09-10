@@ -1,4 +1,3 @@
-# Lint as: python2, python3
 # Copyright 2020 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,6 +33,7 @@ from google.protobuf import json_format
 from ml_metadata.proto import metadata_store_pb2
 
 
+# TODO(b/166202742): Consolidate all all container entrypoint scripts.
 def main():
   # Log to the container's stdout so it can be streamed by the orchestrator.
   logging.basicConfig(stream=sys.stdout, level=logging.INFO)

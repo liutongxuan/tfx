@@ -203,9 +203,10 @@ setup(
     # TODO(b/158761800): Move to [build-system] requires in pyproject.toml.
     setup_requires=[
         'pytest-runner',
-        'poetry==1.0.9',  # Required for ResolveDeps command.
-                          # Poetry API is not officially documented and subject
-                          # to change in the future. Thus fix the version.
+        # Required for ResolveDeps command.
+        # Poetry API is not officially documented and subject
+        # to change in the future. Thus fix the version.
+        'poetry==1.0.9',
         'clikit>=0.4.3,<0.5',  # Required for ResolveDeps command.
     ],
     cmdclass={
@@ -233,4 +234,6 @@ setup(
     entry_points="""
         [console_scripts]
         tfx=tfx.tools.cli.cli_main:cli_group
+        tfx-run-executor=tfx.scripts.run_executor:main
+        tfx-kfp-container-entrypoint=tfx.orchestration.kubeflow.container_entrypoint:main
     """)

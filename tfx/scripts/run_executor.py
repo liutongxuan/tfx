@@ -109,12 +109,13 @@ def _run_executor(args, pipeline_args) -> None:
     print(artifact_utils.jsonify_artifact_dict(outputs))
 
 
-def main(argv):
+def main(argv=None):
   """Parses  the arguments for _run_executor() then invokes it.
 
   # pylint: disable=line-too-long
   Args:
-    argv: Unparsed arguments for run_executor.py
+    argv: Unparsed arguments after absl flag parsing, or None if directly taking
+    sys.argv from stdin.
       --executor_class_path: Python class of executor in format of <module>.<class>.
       --temp_directory_path: Common temp directory path for executors.
       --inputs: JSON serialized dict of input artifacts.  If the input needs to be base64-encoded, use --inputs-base64 instead.
@@ -124,7 +125,7 @@ def main(argv):
       --exec_properties: JSON serialized dict of (non artifact) execution properties.  If the execution properties need to be base64-encoded, use --exec_properties-base64 instead.
       --exec_properties-base64: base64-encoded JSON serialized dict of (non artifact) execution properties.  If the execution properties are not base64-encoded, use --exec_properties instead.
       --write_outputs_stdout: Write outputs to last line of stdout, which will be pushed to xcom in Airflow. Please ignore by other users or orchestrators.
-  # pylint: disable=line-too-long
+  # pylint: enable=line-too-long
 
   Returns:
     None
