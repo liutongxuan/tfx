@@ -686,7 +686,8 @@ class Executor(base_executor.BaseExecutor):
       cache_entry_keys = (
           tft_beam.analysis_graph_builder.get_analysis_cache_entry_keys(
               self._preprocessing_fn, self._feature_spec_or_typespec,
-              dataset_keys_list))
+              dataset_keys_list, tft_beam.Context.get_use_tf_compat_v1(),
+              tft_beam.Context.create_base_temp_dir()))
       # We estimate the number of stages in the pipeline to be roughly:
       # analyzers * analysis_paths * 10.
       if (len(cache_entry_keys) * len(dataset_keys_list) * 10 >
@@ -724,7 +725,9 @@ class Executor(base_executor.BaseExecutor):
         filtered_analysis_dataset_keys = (
             tft_beam.analysis_graph_builder.get_analysis_dataset_keys(
                 self._preprocessing_fn, self._feature_spec_or_typespec,
-                dataset_keys_list, input_cache))
+                dataset_keys_list, input_cache,
+                tft_beam.Context.get_use_tf_compat_v1(),
+                tft_beam.Context.create_base_temp_dir()))
 
       new_analyze_data_dict = {}
       for dataset in self._analyze_data_list:
