@@ -75,9 +75,13 @@ class SchemaVisualization(visualizations.ArtifactVisualization):
   ARTIFACT_TYPE = standard_artifacts.Schema
 
   def display(self, artifact: types.Artifact):
-    schema_path = os.path.join(artifact.uri, 'schema.pbtxt')
-    schema = tfdv.load_schema_text(schema_path)
-    tfdv.display_schema(schema)
+    from IPython.core.display import display  # pylint: disable=g-import-not-at-top
+    from IPython.core.display import HTML  # pylint: disable=g-import-not-at-top
+    for split in artifact_utils.decode_split_names(artifact.split_names):
+      display(HTML('<div><b>%r split:</b></div><br/><br/>' % split))
+      schema_path = os.path.join(artifact.uri, split, 'schema.pbtxt')
+      schema = tfdv.load_schema_text(schema_path)
+      tfdv.display_schema(schema)
 
 
 STANDARD_VISUALIZATIONS = frozenset([
