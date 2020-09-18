@@ -25,11 +25,13 @@ from tfx.components.evaluator import constants as evaluator
 from tfx.dsl.resolvers import base_resolver
 from tfx.orchestration import data_types
 from tfx.orchestration import metadata
+from tfx.orchestration.portable.resolvers import base_resolver as ir_base_resolver
 from tfx.types import artifact_utils
 from tfx.types import standard_artifacts
 
 
-class LatestBlessedModelResolver(base_resolver.BaseResolver):
+class LatestBlessedModelResolver(base_resolver.BaseResolver,
+                                 ir_base_resolver.BaseResolver):
   """Special Resolver that return the latest blessed model.
 
   Note that this Resolver is experimental and is subject to change in terms of

@@ -29,6 +29,7 @@ from tfx.orchestration.portable import inputs_utils
 from tfx.orchestration.portable import outputs_utils
 from tfx.orchestration.portable import python_driver_operator
 from tfx.orchestration.portable import python_executor_operator
+from tfx.orchestration.portable import python_resolver_operator
 from tfx.orchestration.portable.mlmd import context_lib
 from tfx.proto.orchestration import driver_output_pb2
 from tfx.proto.orchestration import executable_spec_pb2
@@ -133,6 +134,10 @@ class Launcher(object):
     self._driver_operators.update(DEFAULT_DRIVER_OPERATORS)
     self._driver_operators.update(custom_driver_operators or {})
 
+    self._resolver_operator = python_resolver_operator.PythonResolverOperator(
+        self._pipeline_info, self._pipeline_runtime_spec,
+        self._pipeline_node.inputs)
+
     self._executor_operator = self._executor_operators[type(executor_spec)](
         executor_spec, platform_spec)
     self._output_resolver = outputs_utils.OutputsResolver(
@@ -160,8 +165,7 @@ class Launcher(object):
       # 2. Resolves inputs an execution properties.
       exec_properties = inputs_utils.resolve_parameters(
           node_parameters=self._pipeline_node.parameters)
-      input_artifacts = inputs_utils.resolve_input_artifacts(
-          metadata_handler=m, node_inputs=self._pipeline_node.inputs)
+      input_artifacts = self._resolver_operator.ResolveInputs(m)
       # 3. If not all required inputs are met. Return ExecutionInfo with
       # is_execution_needed being false. No publish will happen so down stream
       # nodes won't be triggered.

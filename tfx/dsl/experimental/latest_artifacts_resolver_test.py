@@ -25,9 +25,53 @@ from tfx import types
 from tfx.dsl.experimental import latest_artifacts_resolver
 from tfx.orchestration import data_types
 from tfx.orchestration import metadata
+from tfx.proto.orchestration import pipeline_pb2
 from tfx.types import standard_artifacts
 
+from google.protobuf import text_format
 from ml_metadata.proto import metadata_store_pb2
+
+_PIPELING_INFO = text_format.Parse("""
+  id: "my_pipeline"
+""", pipeline_pb2.PipelineInfo())
+
+_PIPELINE_RUNTIME_SPEC = text_format.Parse(
+    """
+  pipeline_root {
+    field_value {
+      string_value: "/tmp"
+    }
+  }
+  pipeline_run_id {
+    field_value {
+      string_value: "my_run_id"
+    }
+  }
+""", pipeline_pb2.PipelineRuntimeSpec())
+
+_PIPLINE_NODE = text_format.Parse(
+    """
+  node_info {
+    id: "test_node"
+  }
+  inputs {
+    inputs {
+      key: "input"
+      value {
+        channels {
+          artifact_query {
+            type {
+              name: "Examples"
+            }
+          }
+          producer_node_query {
+            id: "my_component"
+          }
+        }
+      }
+    }
+  }
+""", pipeline_pb2.PipelineNode())
 
 
 class LatestArtifactsResolverTest(tf.test.TestCase):
@@ -79,6 +123,31 @@ class LatestArtifactsResolverTest(tf.test.TestCase):
           for artifact in resolve_result.per_key_resolve_result['input']
       ], [expected_artifact.uri])
       self.assertTrue(resolve_result.per_key_resolve_state['input'])
+
+  def testGetLatestArtifact_IrMode(self):
+    with metadata.Metadata(connection_config=self._connection_config) as m:
+      contexts = m.register_pipeline_contexts_if_not_exists(self._pipeline_info)
+      artifact_one = standard_artifacts.Examples()
+      artifact_one.uri = 'uri_one'
+      m.publish_artifacts([artifact_one])
+      artifact_two = standard_artifacts.Examples()
+      artifact_two.uri = 'uri_two'
+      m.register_execution(
+          exec_properties={},
+          pipeline_info=self._pipeline_info,
+          component_info=self._component_info,
+          contexts=contexts)
+      m.publish_execution(
+          component_info=self._component_info,
+          output_artifacts={'key': [artifact_one, artifact_two]})
+      expected_artifact = max(artifact_one, artifact_two, key=lambda a: a.id)
+
+      resolver = latest_artifacts_resolver.LatestArtifactsResolver()
+      result = resolver.Resolve(m, _PIPELING_INFO, _PIPELINE_RUNTIME_SPEC,
+                                _PIPLINE_NODE.inputs)
+      self.assertIsNotNone(result)
+      self.assertEqual([a.uri for a in result['input']],
+                       [expected_artifact.uri])
 
 
 if __name__ == '__main__':

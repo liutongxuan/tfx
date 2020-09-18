@@ -24,10 +24,12 @@ from tfx import types
 from tfx.dsl.resolvers import base_resolver
 from tfx.orchestration import data_types
 from tfx.orchestration import metadata
+from tfx.orchestration.portable.resolvers import base_resolver as ir_base_resolver
 from tfx.types import artifact_utils
 
 
-class LatestArtifactsResolver(base_resolver.BaseResolver):
+class LatestArtifactsResolver(base_resolver.BaseResolver,
+                              ir_base_resolver.BaseResolver):
   """Resolver that return the latest n artifacts in a given channel.
 
   Note that this Resolver is experimental and is subject to change in terms of
